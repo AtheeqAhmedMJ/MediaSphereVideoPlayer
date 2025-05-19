@@ -1,0 +1,49 @@
+{
+  "name": "electron-video-player",
+  "version": "1.0.0",
+  "description": "Offline video player with custom JavaScript renderer",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+
+  "devDependencies": {
+    "electron": "^35.0.2",
+    "electron-builder": "^25.1.8",
+    "electron-packager": "^17.1.2"
+  },
+
+  "build": {
+    "appId": "com.mediaplayer.app",
+    "productName": "MediaSphere Video Player",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "renderer.js",
+      "index.html",
+      "package.json",
+      "styles.css",
+      "assets/**"
+    ],
+    "mac": {
+      "target": "zip",
+      "icon": "assets/icon.icns",  
+      "compression": "normal"
+    },
+    "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64", "ia32"]
+      }
+    ],
+    "icon": "assets/icon.ico",
+    "compression": "normal"
+  }
+}
+}
+

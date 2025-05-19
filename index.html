@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Media Sphere Video Player</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Quantico:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app-container">
+    
+    <div class="titlebar">
+      <div class="titlebar-drag-region"></div>
+      <div class="window-controls">
+        <button id="minimizeBtn" class="control-btn"><i class="fas fa-window-minimize"></i></button>
+        <button id="maximizeBtn" class="control-btn"><i class="fas fa-window-maximize"></i></button>
+        <button id="closeBtn" class="control-btn"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-icon"><i class="fas fa-film"></i></span>
+        <span class="logo-text">Media Sphere Media Player</span>
+      </div>
+      
+      <div class="file-actions">
+        <input type="file" id="fileInput" accept="video/*" multiple hidden />
+        <button class="sidebar-file-btn" id="openFileBtn">
+          <i class="fas fa-folder-open"></i>
+          Open Files
+        </button>
+      </div>
+
+      <nav>
+        <ul id="navList">
+          <li class="nav-item active" data-view="now-playing"><i class="fas fa-play-circle"></i> Now Playing</li>
+          <li class="nav-item" data-view="video-library"><i class="fas fa-video"></i> Your Video Library</li>
+        </ul>
+      </nav>
+
+      <div id="videoLibraryView" class="sidebar-section" style="display: none;">
+        <h3>Your Video Library</h3>
+        <ul id="playlist" class="video-list">
+          <!-- Video entries will be injected here -->
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>PLAYLISTS</h3>
+        <div class="playlist-actions">
+          <button class="sidebar-btn" id="createPlaylistBtn">
+            <i class="fas fa-plus"></i> Create New Playlist
+          </button>
+        </div>
+        <ul class="sidebar-playlists" id="sidebarPlaylists">
+          <!-- Playlists will be added here dynamically -->
+        </ul>
+      </div>
+    </aside>
+
+    <!-- MAIN VIEW -->
+    <main class="main-view">
+      <header class="top-bar">
+        <div class="view-title">Now Playing</div>
+        <div class="search-container">
+          <input type="text" id="searchPlaylist" placeholder="Search videos..." />
+          <i class="fas fa-search search-icon"></i>
+        </div>
+      </header>
+
+      <div class="view-container">
+        <div class="player-wrapper player-container">
+          <div class="video-box">
+            <video id="videoPlayer" class="video-player" controls playsinline crossorigin="anonymous"></video>
+            <div id="loadingIndicator" class="loading-indicator">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          
+          <div class="video-controls">
+            <div class="progress-container">
+              <span id="currentTime">0:00</span>
+              <input type="range" id="progressBar" min="0" max="100" value="0" step="any" />
+              <span id="duration">0:00</span>
+            </div>
+            <div class="controls">
+              <button id="prevBtn" class="control-icon"><i class="fas fa-step-backward"></i></button>
+              <button id="playPauseBtn" class="play-btn">
+                <i id="playIcon" class="fas fa-play"></i>
+                <i id="pauseIcon" class="fas fa-pause" style="display: none;"></i>
+              </button>
+              <button id="nextBtn" class="control-icon"><i class="fas fa-step-forward"></i></button>
+              <button id="muteBtn" class="control-icon">
+                <i id="volumeIcon" class="fas fa-volume-up"></i>
+                <i id="muteIcon" class="fas fa-volume-mute" style="display: none;"></i>
+              </button>
+              <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" />
+              <button id="fullscreenBtn" class="control-icon"><i class="fas fa-expand"></i></button>
+              <button id="settingsBtn" class="control-icon" title="Settings">
+                <i class="fas fa-cog"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- SETTINGS PANEL -->
+  <div id="settingsPanel" class="settings-panel" style="display: none;">
+    <h3>Playback Settings</h3>
+    <div class="setting-option">
+      <label for="audioTrackSelect">Audio Track:</label>
+      <select id="audioTrackSelect"></select>
+    </div>
+    <div class="setting-option">
+      <label for="subtitleTrackSelect">Subtitles:</label>
+      <select id="subtitleTrackSelect">
+        <option value="-1">Off</option>
+      </select>
+    </div>
+    <div class="setting-option">
+      <label for="playbackRate">Speed:</label>
+      <input type="range" id="playbackRate" min="0.25" max="2" step="0.25" value="1">
+    </div>
+    <div class="setting-option">
+      <label>
+        
+      </label>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script src="renderer.js"></script>
+  <script>
+    const navItems = document.querySelectorAll('.nav-item');
+    const videoLibraryView = document.getElementById('videoLibraryView');
+    const viewContainer = document.querySelector('.view-container');
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        const view = item.dataset.view;
+        if (view === 'now-playing') {
+          viewContainer.style.display = 'block';
+          videoLibraryView.style.display = 'none';
+        } else if (view === 'video-library') {
+          viewContainer.style.display = 'none';
+          videoLibraryView.style.display = 'block';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
